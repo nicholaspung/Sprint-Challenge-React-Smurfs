@@ -5,6 +5,7 @@ import { Route, NavLink } from 'react-router-dom';
 import './App.css';
 import SmurfForm from './components/SmurfForm';
 import Smurfs from './components/Smurfs';
+import EditSmurf from './components/EditSmurf';
 
 class App extends Component {
   constructor(props) {
@@ -25,9 +26,9 @@ class App extends Component {
   deleteSmurf = id => {
     axios.delete(`http://localhost:3333/smurfs/${id}`)
       .then(res => this.setState({ smurfs: res.data }))
+      .then(e => this.props.history.push('/'))
       .catch(err => console.log("Error", err))
   }
-
 
   render() {
     return (
@@ -37,6 +38,7 @@ class App extends Component {
 
         <Route exact path="/" render={props => <Smurfs smurfs={this.state.smurfs} {...props} deleteSmurf={this.deleteSmurf} />} />
         <Route path="/smurf-form" component={SmurfForm} />
+        <Route path="/smurf/:id" render={props => <EditSmurf {...props} smurfs={this.state.smurfs} deleteSmurf={this.deleteSmurf}/>} />
       </div>
     );
   }
