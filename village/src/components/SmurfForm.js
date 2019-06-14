@@ -24,8 +24,8 @@ class SmurfForm extends Component {
         age: '',
         height: ''
       }))
-
-    
+      .then(e => this.props.history.push("/"))
+      .catch(err => console.log("Error", err))
   }
 
   handleInputChange = e => {
@@ -33,6 +33,7 @@ class SmurfForm extends Component {
   };
 
   render() {
+    console.log(this.props)
     return (
       <div className="SmurfForm">
         <form onSubmit={this.addSmurf}>
