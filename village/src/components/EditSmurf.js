@@ -1,5 +1,6 @@
 import React from 'react';
 import Smurf from './Smurf';
+import SmurfForm from './SmurfForm';
 
 class EditSmurf extends React.Component {
     state = {
@@ -18,7 +19,7 @@ class EditSmurf extends React.Component {
                     deleteSmurf={this.props.deleteSmurf}
                 />)}
 
-                
+                <SmurfForm smurf={this.state.smurf[0]} history={this.props.history}/>
             </div>
         );
     }
