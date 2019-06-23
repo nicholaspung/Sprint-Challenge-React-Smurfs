@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 class SmurfForm extends Component {
   constructor(props) {
@@ -6,19 +7,58 @@ class SmurfForm extends Component {
     this.state = {
       name: '',
       age: '',
-      height: ''
+      height: '',
+      title: 'Add to the village'
     };
+  }
+
+  componentDidMount() {
+    if (this.props.smurf) {
+      this.setState({
+        name: this.props.smurf.name,
+        age: this.props.smurf.age,
+        height: this.props.smurf.height,
+        id: this.props.smurf.id,
+        title: "Update smurf"
+      })
+    }
   }
 
   addSmurf = event => {
     event.preventDefault();
     // add code to create the smurf using the api
+    axios.post('http://localhost:3333/smurfs', {
+      name: this.state.name,
+      age: this.state.age,
+      height: this.state.height
+    })
+      .then(res => this.setState({
+        name: '',
+        age: '',
+        height: ''
+      }))
+      .then(e => this.props.history.push("/"))
+      .catch(err => console.log("Error", err))
+  }
 
-    this.setState({
-      name: '',
-      age: '',
-      height: ''
-    });
+  updateSmurf = event => {
+    event.preventDefault();
+    // add code to create the smurf using the api
+    axios.put(`http://localhost:3333/smurfs/${this.state.id}`, {
+      name: this.state.name,
+      age: this.state.age,
+      height: this.state.height
+    })
+      .then(e => this.props.history.push("/"))
+      .catch(err => console.log("Error", err))
+  }
+
+  checkAddOrUpdate = e => {
+    if (this.props.smurf) {
+      this.updateSmurf(e)
+    } else {
+      this.addSmurf(e)
+    }
   }
 
   handleInputChange = e => {
@@ -28,7 +68,7 @@ class SmurfForm extends Component {
   render() {
     return (
       <div className="SmurfForm">
-        <form onSubmit={this.addSmurf}>
+        <form onSubmit={this.checkAddOrUpdate}>
           <input
             onChange={this.handleInputChange}
             placeholder="name"
@@ -47,7 +87,7 @@ class SmurfForm extends Component {
             value={this.state.height}
             name="height"
           />
-          <button type="submit">Add to the village</button>
+          <button type="submit">{this.state.title}</button>
         </form>
       </div>
     );
